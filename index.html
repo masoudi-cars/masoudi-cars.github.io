@@ -230,20 +230,63 @@ h2{
   border-radius:16px;
   overflow:hidden;
   transition:transform .3s;
+  cursor:pointer;
 }
-.car-card:hover{transform:translateY(-5px)}
+.car-card:hover{
+  transform:translateY(-5px);
+  border-color:var(--gold);
+}
 .car-card img{
   display:block;
   width:100%;
-  aspect-ratio:4/3;
+  aspect-ratio:16/10;
   object-fit:cover;
+  transition:transform .45s;
 }
+.car-card:hover img{transform:scale(1.035)}
 .car-card p{
   margin:0;
   padding:10px;
   color:var(--goldlight);
-  font-size:12px;
+  font-size:clamp(12px,2.5vw,16px);
   text-align:center;
+}
+.lightbox{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.94);
+  z-index:300;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  padding:25px 12px;
+  gap:12px;
+}
+.lightbox.open{display:flex}
+.lightbox img{
+  max-width:min(96vw,1100px);
+  max-height:78vh;
+  object-fit:contain;
+  border-radius:12px;
+  border:1px solid var(--line);
+}
+.lightbox p{
+  color:var(--goldlight);
+  font-size:18px;
+  margin:0;
+}
+.lightbox button{
+  position:absolute;
+  top:15px;
+  left:18px;
+  background:#17191d;
+  color:white;
+  border:1px solid var(--gold);
+  border-radius:50%;
+  width:45px;
+  height:45px;
+  font-size:25px;
 }
 .contact{
   text-align:center;
@@ -289,7 +332,7 @@ footer{
     gap:25px;
   }
   .about-grid{grid-template-columns:1fr 1fr}
-  .gallery{grid-template-columns:repeat(4,1fr)}
+  .gallery{grid-template-columns:repeat(3,1fr)}
   .hero{padding-top:50px}
 }
 @media(max-width:380px){
@@ -369,6 +412,7 @@ footer{
   <h2>گالری خودروهای Masoudi</h2>
   <p>نگاهی به دنیای زیبایی، قدرت و طراحی خودرو.</p>
   <div class="gallery" id="gallery"></div>
+  <p style="font-size:12px;text-align:center">تصاویر برای معرفی نمونه‌های نمایشی خودروها هستند.</p>
 </section>
 
 <section class="section contact" id="contact">
@@ -385,6 +429,12 @@ footer{
 
 <button id="backTop" aria-label="بازگشت به بالای صفحه">↑</button>
 
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="نمایش بزرگ تصویر خودرو">
+  <button id="closeLightbox" aria-label="بستن">×</button>
+  <img id="lightboxImage" alt="">
+  <p id="lightboxTitle"></p>
+</div>
+
 <script>
 "use strict";
 
@@ -397,54 +447,102 @@ function path(i){
   return "images/Masoudi_"+String(i).padStart(3,"0")+".jpg";
 }
 
-// نمایش تصاویر متحرک خودرو
+// نمایش روان ۷۹ فریم ماشین اصلی
 let current=0;
-let heroTimer=null;
+const frames=Array.from({length:TOTAL},()=>null);
+let loadedCount=0;
 
-function showHero(i){
-  const img=new Image();
-  img.onload=()=>{
-    hero.src=img.src;
-    hero.style.display="block";
-    loading.style.display="none";
-    current=i;
-  };
-  img.onerror=()=>{
+frames.forEach((_,i)=>{
+  const frame=new Image();
+  frame.onload=()=>{
+    frames[i]=frame;
+    loadedCount++;
     if(i===0){
-      loading.textContent="تصویر اصلی خودرو پیدا نشد.";
+      hero.src=frame.src;
+      hero.style.display="block";
+      loading.style.display="none";
     }
   };
-  img.src=path(i);
+  frame.onerror=()=>{
+    if(i===0)loading.textContent="تصویر اصلی خودرو پیدا نشد.";
+  };
+  frame.src=path(i);
+});
+
+// اجرای پیوسته فریم‌های آماده
+let lastFrameTime=0;
+function animateCar(now){
+  if(now-lastFrameTime>=110){
+    const next=(current+1)%TOTAL;
+    if(frames[next]){
+      current=next;
+      hero.src=frames[current].src;
+      lastFrameTime=now;
+    }
+  }
+  requestAnimationFrame(animateCar);
+}
+requestAnimationFrame(animateCar);
+
+// گالری شش خودروی مستقل
+const cars=[
+  {name:"Mercedes-Benz S-Class | مرسدس بنز کلاس S",file:"Masoudi_Mercedes.png"},
+  {name:"BMW 7 Series | بی‌ام‌و سری ۷",file:"Masoudi_BMW.png"},
+  {name:"Porsche 911 | پورشه ۹۱۱",file:"Masoudi_Porsche.png"},
+  {name:"Lexus LX 600 | لکسوس LX 600",file:"Masoudi_Lexus.png"},
+  {name:"Range Rover | رنجروور",file:"Masoudi_RangeRover.png"},
+  {name:"Mercedes-AMG GT | مرسدس AMG GT",file:"Masoudi_AMG.png"}
+];
+
+const lightbox=document.getElementById("lightbox");
+const lightboxImage=document.getElementById("lightboxImage");
+const lightboxTitle=document.getElementById("lightboxTitle");
+
+function closeGallery(){
+  lightbox.classList.remove("open");
+  document.body.style.overflow="";
 }
 
-showHero(0);
-
-let next=1;
-heroTimer=setInterval(()=>{
-  const img=new Image();
-  const index=next;
-  img.onload=()=>{
-    hero.src=img.src;
-    loading.style.display="none";
-    current=index;
-  };
-  img.src=path(index);
-  next=(next+1)%TOTAL;
-},4500);
-
-// گالری خودروها
-const galleryIndexes=[0,1,2,3,4,5,6,7,8,9,10,11];
-galleryIndexes.forEach(i=>{
+cars.forEach(car=>{
   const card=document.createElement("div");
   card.className="car-card";
+  card.tabIndex=0;
+  card.setAttribute("role","button");
+  card.setAttribute("aria-label","بزرگ‌نمایی "+car.name);
+
   const img=document.createElement("img");
-  img.src=path(i);
-  img.alt="خودروی لوکس Masoudi";
+  img.src="images/"+car.file;
+  img.alt=car.name;
   img.loading="lazy";
+
   const label=document.createElement("p");
-  label.textContent="MASOUDI COLLECTION";
+  label.textContent=car.name;
   card.append(img,label);
+
+  const open=()=>{
+    lightboxImage.src=img.src;
+    lightboxImage.alt=car.name;
+    lightboxTitle.textContent=car.name;
+    lightbox.classList.add("open");
+    document.body.style.overflow="hidden";
+  };
+
+  card.addEventListener("click",open);
+  card.addEventListener("keydown",e=>{
+    if(e.key==="Enter"||e.key===" "){
+      e.preventDefault();
+      open();
+    }
+  });
   gallery.appendChild(card);
+});
+
+document.getElementById("closeLightbox").addEventListener("click",closeGallery);
+lightbox.addEventListener("click",e=>{
+  if(e.target===lightbox)closeGallery();
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape")closeGallery();
 });
 
 // منوی موبایل
