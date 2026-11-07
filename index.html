@@ -30,6 +30,7 @@ body{
 }
 a{text-decoration:none;color:inherit}
 button{font:inherit;cursor:pointer}
+
 header{
   position:sticky;
   top:0;
@@ -54,7 +55,8 @@ header{
   direction:ltr;
 }
 .brand-mark{
-  width:45px;height:45px;
+  width:45px;
+  height:45px;
   border:1px solid var(--gold);
   border-radius:50%;
   display:grid;
@@ -75,28 +77,52 @@ header{
   border:1px solid var(--line);
   border-radius:12px;
   font-size:27px;
-  width:48px;height:48px;
+  width:48px;
+  height:48px;
 }
 nav.links{
   display:none;
   position:absolute;
   top:100%;
-  right:0;left:0;
+  right:0;
+  left:0;
   background:#101116;
   padding:20px;
   border-bottom:1px solid var(--line);
 }
 nav.links.open{display:grid;gap:18px}
 nav.links a:hover{color:var(--gold)}
-.hero{
-  text-align:center;
-  padding:30px 0 0;
-  background:radial-gradient(ellipse at 50% 20%,#1a1a1e,var(--bg) 75%);
+
+/* ORIGINAL SCROLL-BASED CAR ROTATION LAYOUT */
+.hero-scroll{
+  position:relative;
+  height:230vh;
+  background:radial-gradient(
+    ellipse at 50% 30%,
+    #1a1a1e,
+    var(--bg) 75%
+  );
+}
+.hero-sticky{
+  position:sticky;
+  top:0;
+  height:100svh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-top:76px;
 }
 .hero-copy{
-  padding:0 14px;
+  position:relative;
+  z-index:5;
+  flex-shrink:0;
+  text-align:center;
+  padding:15px 14px 0;
   max-width:850px;
-  margin:auto;
+  width:100%;
+  margin:0 auto;
+  transition:opacity .2s;
 }
 .eyebrow{
   color:var(--gold);
@@ -135,27 +161,50 @@ h1{
 }
 .btn:hover{transform:translateY(-3px)}
 .primary{
-  background:linear-gradient(120deg,var(--goldlight),#bd9054);
+  background:linear-gradient(
+    120deg,
+    var(--goldlight),
+    #bd9054
+  );
   color:#17120c;
 }
 .secondary{background:#111216}
+
 .hero-visual{
   position:relative;
+  flex:1;
+  min-height:0;
   width:100%;
   max-width:1200px;
-  margin:18px auto 0;
+  margin:0 auto;
   overflow:hidden;
-  background:#08090d;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .hero-visual img{
-  width:100%;
-  height:auto;
   display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+  pointer-events:none;
+  user-select:none;
 }
 .hero-visual .loading{
-  padding:60px 15px;
-  color:var(--muted);
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  padding:15px 20px;
+  color:var(--goldlight);
+  background:rgba(8,9,13,.9);
+  border:1px solid var(--line);
+  border-radius:12px;
+  font-size:12px;
 }
+
+/* OTHER SECTIONS */
 .section{
   max-width:1150px;
   margin:auto;
@@ -218,6 +267,8 @@ h2{
   font-size:12px;
   margin-top:7px;
 }
+
+/* CAR GALLERY */
 .gallery{
   display:grid;
   grid-template-columns:repeat(2,minmax(0,1fr));
@@ -243,7 +294,9 @@ h2{
   object-fit:cover;
   transition:transform .45s;
 }
-.car-card:hover img{transform:scale(1.035)}
+.car-card:hover img{
+  transform:scale(1.035);
+}
 .car-card p{
   margin:0;
   padding:10px;
@@ -251,6 +304,8 @@ h2{
   font-size:clamp(12px,2.5vw,16px);
   text-align:center;
 }
+
+/* IMAGE LIGHTBOX */
 .lightbox{
   position:fixed;
   inset:0;
@@ -288,6 +343,8 @@ h2{
   height:45px;
   font-size:25px;
 }
+
+/* CONTACT AND FOOTER */
 .contact{
   text-align:center;
   border-top:1px solid var(--line);
@@ -304,10 +361,15 @@ footer{
   left:20px;
   bottom:25px;
   z-index:90;
-  width:53px;height:53px;
+  width:53px;
+  height:53px;
   border-radius:50%;
   border:1px solid #f0d3a0;
-  background:linear-gradient(135deg,#f3d6a1,#bd9156);
+  background:linear-gradient(
+    135deg,
+    #f3d6a1,
+    #bd9156
+  );
   color:#14100a;
   font-size:27px;
   box-shadow:0 8px 25px #0007;
@@ -321,6 +383,8 @@ footer{
   pointer-events:auto;
   transform:translateY(0);
 }
+
+/* RESPONSIVE DESIGN */
 @media(min-width:768px){
   .menu-btn{display:none}
   nav.links{
@@ -331,16 +395,33 @@ footer{
     border:0;
     gap:25px;
   }
-  .about-grid{grid-template-columns:1fr 1fr}
-  .gallery{grid-template-columns:repeat(3,1fr)}
-  .hero{padding-top:50px}
+  .about-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  .gallery{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+@media(max-width:767px){
+  .hero-scroll{height:215vh}
+  .hero-sticky{padding-top:66px}
+  .hero-copy{padding-top:12px}
 }
 @media(max-width:380px){
-  h1{font-size:clamp(25px,7.8vw,30px)}
+  h1{
+    font-size:clamp(25px,7.8vw,30px);
+  }
   .brand-name{font-size:22px}
-  .brand-mark{width:39px;height:39px}
-  .hero{padding-top:23px}
-  .btn{padding:11px 12px;font-size:12px}
+  .brand-mark{
+    width:39px;
+    height:39px;
+  }
+  .hero-sticky{padding-top:66px}
+  .hero-copy{padding-top:10px}
+  .btn{
+    padding:11px 12px;
+    font-size:12px;
+  }
 }
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -348,6 +429,7 @@ footer{
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -356,7 +438,14 @@ footer{
       <span class="brand-name">MASOUDI</span>
       <span class="brand-mark">M</span>
     </a>
-    <button class="menu-btn" id="menuBtn" aria-label="باز کردن منو" aria-expanded="false">☰</button>
+
+    <button
+      class="menu-btn"
+      id="menuBtn"
+      aria-label="باز کردن منو"
+      aria-expanded="false"
+    >☰</button>
+
     <nav class="links" id="navLinks">
       <a href="#home">صفحه اصلی</a>
       <a href="#about">درباره ما</a>
@@ -367,70 +456,152 @@ footer{
 </header>
 
 <main>
-<section class="hero" id="home">
-  <div class="hero-copy">
-    <div class="eyebrow">THE ART OF LUXURY DRIVING</div>
-    <h1>فراتر از رانندگی</h1>
-    <p>
-      فروشگاه ماشین Masoudi؛ تجربه‌ای متفاوت از دنیای خودروهای لوکس و طراحی ماندگار.
-    </p>
-    <div class="actions">
-      <a href="#collection" class="btn primary">کشف دنیای Masoudi</a>
-      <a href="#contact" class="btn secondary">ارتباط با ما</a>
-    </div>
-  </div>
 
-  <div class="hero-visual">
-    <img id="heroImage" alt="خودروی لوکس نمایشگاه Masoudi" fetchpriority="high">
-    <div id="heroLoading" class="loading">در حال بارگذاری تصاویر خودرو...</div>
+<!-- SCROLL-CONTROLLED CAR -->
+<section class="hero-scroll" id="home">
+  <div class="hero-sticky">
+
+    <div class="hero-copy">
+      <div class="eyebrow">
+        THE ART OF LUXURY DRIVING
+      </div>
+
+      <h1>فراتر از رانندگی</h1>
+
+      <p>
+        فروشگاه ماشین Masoudi؛ تجربه‌ای متفاوت از
+        دنیای خودروهای لوکس و طراحی ماندگار.
+      </p>
+
+      <div class="actions">
+        <a href="#collection" class="btn primary">
+          کشف دنیای Masoudi
+        </a>
+        <a href="#contact" class="btn secondary">
+          ارتباط با ما
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <img
+        id="heroImage"
+        src="images/Masoudi_000.jpg"
+        alt="خودروی لوکس نمایشگاه Masoudi"
+        fetchpriority="high"
+      >
+      <div id="heroLoading" class="loading">
+        در حال بارگذاری تصاویر خودرو...
+      </div>
+    </div>
+
   </div>
 </section>
 
+<!-- ABOUT MASOUDI -->
 <section class="about" id="about">
   <div class="section about-grid">
     <div>
-      <div class="section-label">ABOUT MASOUDI</div>
+      <div class="section-label">
+        ABOUT MASOUDI
+      </div>
+
       <h2>زیبایی در جزئیات است</h2>
+
       <p>
-        خودرو فقط وسیله‌ای برای جابه‌جایی نیست؛ جلوه‌ای از سلیقه، شخصیت و سبک زندگی است.
-        در نمایشگاه ماشین Masoudi، فضایی متفاوت برای آشنایی با دنیای خودروهای لوکس فراهم کرده‌ایم.
+        خودرو فقط وسیله‌ای برای جابه‌جایی نیست؛
+        جلوه‌ای از سلیقه، شخصیت و سبک زندگی است.
+        در نمایشگاه ماشین Masoudi، فضایی متفاوت
+        برای آشنایی با دنیای خودروهای لوکس فراهم کرده‌ایم.
       </p>
+
       <div class="features">
-        <div class="feature"><strong>01</strong><span>زیبایی در طراحی</span></div>
-        <div class="feature"><strong>02</strong><span>توجه به جزئیات</span></div>
-        <div class="feature"><strong>03</strong><span>تجربه‌ای متفاوت</span></div>
+        <div class="feature">
+          <strong>01</strong>
+          <span>زیبایی در طراحی</span>
+        </div>
+        <div class="feature">
+          <strong>02</strong>
+          <span>توجه به جزئیات</span>
+        </div>
+        <div class="feature">
+          <strong>03</strong>
+          <span>تجربه‌ای متفاوت</span>
+        </div>
       </div>
     </div>
+
     <div class="interior">
-      <img src="images/Masoudi_079.png" alt="فضای داخلی خودروی لوکس" loading="lazy">
+      <img
+        src="images/Masoudi_079.png"
+        alt="فضای داخلی خودروی لوکس"
+        loading="lazy"
+      >
     </div>
   </div>
 </section>
 
+<!-- SIX LUXURY CARS -->
 <section class="section" id="collection">
-  <div class="section-label">THE COLLECTION</div>
+  <div class="section-label">
+    THE COLLECTION
+  </div>
+
   <h2>گالری خودروهای Masoudi</h2>
-  <p>نگاهی به دنیای زیبایی، قدرت و طراحی خودرو.</p>
+
+  <p>
+    نگاهی به دنیای زیبایی، قدرت و طراحی خودرو.
+  </p>
+
   <div class="gallery" id="gallery"></div>
-  <p style="font-size:12px;text-align:center">تصاویر برای معرفی نمونه‌های نمایشی خودروها هستند.</p>
+
+  <p style="font-size:12px;text-align:center">
+    تصاویر برای معرفی نمونه‌های نمایشی خودروها هستند.
+  </p>
 </section>
 
+<!-- CONTACT -->
 <section class="section contact" id="contact">
-  <div class="section-label">GET IN TOUCH</div>
+  <div class="section-label">
+    GET IN TOUCH
+  </div>
+
   <h2>ارتباط با Masoudi</h2>
-  <p>برای آشنایی بیشتر با مجموعه با ما در ارتباط باشید.</p>
-  <p>اطلاعات تماس و شبکه‌های اجتماعی به‌زودی در این بخش قرار می‌گیرد.</p>
+
+  <p>
+    برای آشنایی بیشتر با مجموعه با ما در ارتباط باشید.
+  </p>
+
+  <p>
+    اطلاعات تماس و شبکه‌های اجتماعی به‌زودی
+    در این بخش قرار می‌گیرد.
+  </p>
 </section>
+
 </main>
 
 <footer>
-  © <span id="year"></span> MASOUDI — تمامی حقوق محفوظ است.
+  © <span id="year"></span>
+  MASOUDI — تمامی حقوق محفوظ است.
 </footer>
 
-<button id="backTop" aria-label="بازگشت به بالای صفحه">↑</button>
+<button
+  id="backTop"
+  aria-label="بازگشت به بالای صفحه"
+>↑</button>
 
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="نمایش بزرگ تصویر خودرو">
-  <button id="closeLightbox" aria-label="بستن">×</button>
+<!-- FULL SIZE GALLERY VIEW -->
+<div
+  class="lightbox"
+  id="lightbox"
+  role="dialog"
+  aria-modal="true"
+  aria-label="نمایش بزرگ تصویر خودرو"
+>
+  <button id="closeLightbox" aria-label="بستن">
+    ×
+  </button>
+
   <img id="lightboxImage" alt="">
   <p id="lightboxTitle"></p>
 </div>
@@ -444,54 +615,173 @@ const loading=document.getElementById("heroLoading");
 const gallery=document.getElementById("gallery");
 
 function path(i){
-  return "images/Masoudi_"+String(i).padStart(3,"0")+".jpg";
+  return "images/Masoudi_"
+    +String(i).padStart(3,"0")
+    +".jpg";
 }
 
-// نمایش روان ۷۹ فریم ماشین اصلی
-let current=0;
-const frames=Array.from({length:TOTAL},()=>null);
-let loadedCount=0;
+/*
+ ORIGINAL SCROLL ROTATION
+ Restored from the working version.
+*/
 
-frames.forEach((_,i)=>{
-  const frame=new Image();
-  frame.onload=()=>{
-    frames[i]=frame;
-    loadedCount++;
+const heroSection=document.getElementById("home");
+const heroCopy=document.querySelector(".hero-copy");
+
+const frames=new Array(TOTAL);
+const ready=new Array(TOTAL).fill(false);
+
+let current=0;
+let target=0;
+let raf=0;
+
+function preload(i){
+  if(i<0||i>=TOTAL||frames[i])return;
+
+  const img=new Image();
+  frames[i]=img;
+
+  img.onload=()=>{
+    ready[i]=true;
+
     if(i===0){
-      hero.src=frame.src;
-      hero.style.display="block";
       loading.style.display="none";
+      draw(0);
     }
   };
-  frame.onerror=()=>{
-    if(i===0)loading.textContent="تصویر اصلی خودرو پیدا نشد.";
-  };
-  frame.src=path(i);
-});
 
-// اجرای پیوسته فریم‌های آماده
-let lastFrameTime=0;
-function animateCar(now){
-  if(now-lastFrameTime>=110){
-    const next=(current+1)%TOTAL;
-    if(frames[next]){
-      current=next;
-      hero.src=frames[current].src;
-      lastFrameTime=now;
+  img.onerror=()=>{
+    frames[i]=null;
+
+    if(i===0){
+      loading.textContent=
+        "تصویر اصلی خودرو پیدا نشد.";
+    }
+  };
+
+  img.src=path(i);
+}
+
+function nearest(i){
+  if(ready[i])return i;
+
+  for(let d=1;d<TOTAL;d++){
+    if(i-d>=0&&ready[i-d]){
+      return i-d;
+    }
+
+    if(i+d<TOTAL&&ready[i+d]){
+      return i+d;
     }
   }
-  requestAnimationFrame(animateCar);
-}
-requestAnimationFrame(animateCar);
 
-// گالری شش خودروی مستقل
+  return -1;
+}
+
+function draw(i){
+  const k=nearest(i);
+
+  if(
+    k>=0 &&
+    hero.getAttribute("src")!==path(k)
+  ){
+    hero.src=path(k);
+  }
+}
+
+function animate(){
+  raf=0;
+
+  current+=(target-current)*.16;
+
+  if(Math.abs(target-current)<.12){
+    current=target;
+  }
+
+  draw(Math.round(current));
+
+  if(Math.abs(target-current)>.12){
+    raf=requestAnimationFrame(animate);
+  }
+}
+
+function updateScroll(){
+  const travel=Math.max(
+    1,
+    heroSection.offsetHeight-innerHeight
+  );
+
+  const progress=Math.min(
+    1,
+    Math.max(
+      0,
+      -heroSection.getBoundingClientRect().top/travel
+    )
+  );
+
+  target=progress*(TOTAL-1);
+
+  if(!raf){
+    raf=requestAnimationFrame(animate);
+  }
+
+  heroCopy.style.opacity=String(
+    Math.max(0,1-progress*3.5)
+  );
+
+  heroCopy.style.pointerEvents=
+    progress>.25?"none":"auto";
+}
+
+preload(0);
+
+for(let i=1;i<TOTAL;i++){
+  setTimeout(
+    ()=>preload(i),
+    i*35
+  );
+}
+
+window.addEventListener(
+  "scroll",
+  updateScroll,
+  {passive:true}
+);
+
+window.addEventListener(
+  "resize",
+  updateScroll
+);
+
+updateScroll();
+
+/* SIX CAR GALLERY */
+
 const cars=[
-  {name:"Mercedes-Benz S-Class | مرسدس بنز کلاس S",file:"Masoudi_Mercedes.png"},
-  {name:"BMW 7 Series | بی‌ام‌و سری ۷",file:"Masoudi_BMW.png"},
-  {name:"Porsche 911 | پورشه ۹۱۱",file:"Masoudi_Porsche.png"},
-  {name:"Lexus LX 600 | لکسوس LX 600",file:"Masoudi_Lexus.png"},
-  {name:"Range Rover | رنجروور",file:"Masoudi_RangeRover.png"},
-  {name:"Mercedes-AMG GT | مرسدس AMG GT",file:"Masoudi_AMG.png"}
+  {
+    name:"Mercedes-Benz S-Class | مرسدس بنز کلاس S",
+    file:"Masoudi_Mercedes.png"
+  },
+  {
+    name:"BMW 7 Series | بی‌ام‌و سری ۷",
+    file:"Masoudi_BMW.png"
+  },
+  {
+    name:"Porsche 911 | پورشه ۹۱۱",
+    file:"Masoudi_Porsche.png"
+  },
+  {
+    name:"Lexus LX 600 | لکسوس LX 600",
+    file:"Masoudi_Lexus.png"
+  },
+  {
+    name:"Range Rover | رنجروور",
+    file:"Masoudi_RangeRover.png"
+  },
+  {
+    name:"Mercedes-AMG GT | مرسدس AMG GT",
+    file:"Masoudi_AMG.png"
+  }
 ];
 
 const lightbox=document.getElementById("lightbox");
@@ -507,8 +797,12 @@ cars.forEach(car=>{
   const card=document.createElement("div");
   card.className="car-card";
   card.tabIndex=0;
+
   card.setAttribute("role","button");
-  card.setAttribute("aria-label","بزرگ‌نمایی "+car.name);
+  card.setAttribute(
+    "aria-label",
+    "بزرگ‌نمایی "+car.name
+  );
 
   const img=document.createElement("img");
   img.src="images/"+car.file;
@@ -517,6 +811,7 @@ cars.forEach(car=>{
 
   const label=document.createElement("p");
   label.textContent=car.name;
+
   card.append(img,label);
 
   const open=()=>{
@@ -524,56 +819,90 @@ cars.forEach(car=>{
     lightboxImage.alt=car.name;
     lightboxTitle.textContent=car.name;
     lightbox.classList.add("open");
+
     document.body.style.overflow="hidden";
   };
 
   card.addEventListener("click",open);
+
   card.addEventListener("keydown",e=>{
     if(e.key==="Enter"||e.key===" "){
       e.preventDefault();
       open();
     }
   });
+
   gallery.appendChild(card);
 });
 
-document.getElementById("closeLightbox").addEventListener("click",closeGallery);
+document
+  .getElementById("closeLightbox")
+  .addEventListener("click",closeGallery);
+
 lightbox.addEventListener("click",e=>{
-  if(e.target===lightbox)closeGallery();
-});
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape")closeGallery();
+  if(e.target===lightbox){
+    closeGallery();
+  }
 });
 
-// منوی موبایل
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    closeGallery();
+  }
+});
+
+/* MOBILE MENU */
+
 const menuBtn=document.getElementById("menuBtn");
 const navLinks=document.getElementById("navLinks");
 
 menuBtn.addEventListener("click",()=>{
   const open=navLinks.classList.toggle("open");
-  menuBtn.setAttribute("aria-expanded",String(open));
+
+  menuBtn.setAttribute(
+    "aria-expanded",
+    String(open)
+  );
+
   menuBtn.textContent=open?"×":"☰";
 });
 
 navLinks.querySelectorAll("a").forEach(link=>{
   link.addEventListener("click",()=>{
     navLinks.classList.remove("open");
-    menuBtn.setAttribute("aria-expanded","false");
+
+    menuBtn.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+
     menuBtn.textContent="☰";
   });
 });
 
-// بازگشت به بالا
+/* BACK TO TOP */
+
 const backTop=document.getElementById("backTop");
+
 window.addEventListener("scroll",()=>{
-  backTop.classList.toggle("show",window.scrollY>350);
+  backTop.classList.toggle(
+    "show",
+    window.scrollY>350
+  );
 },{passive:true});
 
 backTop.addEventListener("click",()=>{
-  window.scrollTo({top:0,behavior:"smooth"});
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 });
 
-document.getElementById("year").textContent=new Date().getFullYear();
+/* COPYRIGHT YEAR */
+
+document.getElementById("year").textContent=
+  new Date().getFullYear();
+
 </script>
 </body>
 </html>
